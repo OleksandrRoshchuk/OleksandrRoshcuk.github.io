@@ -1,0 +1,21 @@
+*{
+  box-sizing: border-box;
+}
+
+body {
+    background-color: #121114;
+    font-family: 'Neue Montreal', sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+@keyframes maskSlideUp {
+  0% {
+    mask-position: 0% 0%;
+  }
+  100% {
+    mask-position: 0% 100%;
+  }
+}
+

@@ -1,0 +1,65 @@
+.btn {
+  --border-width: 2px;
+  --edge-size: 0.5em;
+
+  font-family: 'Helvetica Neue', sans-serif;
+  text-align: center;
+  position: relative;
+  font-size: 16px;
+  color: #fff;
+  background: linear-gradient(90.92deg, #EFEBFD 0%, #DBEDFF 12.13%, #CEF3ED 18.75%, #E1EBFE 25.57%, #FEFEFE 44.17%, #E8E7FD 70.83%, #C9E8FB 82.81%, #C4EFD1 100%);  color: transparent;
+  background-clip: text;
+  text-decoration: none;
+  backdrop-filter: blur(4px);
+
+  clip-path: polygon(
+    var(--edge-size) 0%,
+    100% 0,
+    100% calc(100% - var(--edge-size)),
+    calc(100% - var(--edge-size)) 100%,
+    0 100%,
+    0% var(--edge-size)
+  );
+  
+  &--large {
+    min-width: 320px;
+    padding: 28px;
+    font-size: 18px;
+    line-height: 1.3;
+    text-transform: uppercase;
+  }
+
+  &:before, 
+  &:after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
+
+  &:before {
+    background: linear-gradient(90.34deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 49.48%, rgba(255, 255, 255, 0.2) 100%);
+  }
+
+  &:after {
+    background: rgba(255, 255, 255, 0.1);
+    z-index: -1;
+    clip-path: polygon(
+    // top left 1
+    var(--border-width) calc(var(--edge-size) + var(--border-width) * 0.5),
+    // top left 2
+    calc(var(--edge-size) + var(--border-width) * 0.5) var(--border-width),
+    // top right
+    calc(100% - var(--border-width)) var(--border-width),
+    //bottom right - 1
+    calc(100% - var(--border-width))
+      calc(100% - calc(var(--edge-size) + var(--border-width) * 0.5)),
+    // bottom right - 2
+    calc(100% - calc(var(--edge-size) + var(--border-width) * 0.5))
+      calc(100% - var(--border-width)),
+    // bottom left
+    calc(var(--border-width)) calc(100% - var(--border-width))
+  );
+  }
+
+}

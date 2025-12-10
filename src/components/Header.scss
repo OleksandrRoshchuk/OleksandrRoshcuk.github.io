@@ -1,0 +1,147 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+
+    @media screen and (min-width: 1024px) {
+      margin-top: 40px;
+      padding: 30px 80px 0;
+    }
+
+    &__logo {
+      position: relative;
+      mask-image: url("../assets/mask.PNG");
+      mask-size: cover;
+      mask-position: 0% 0%;
+      mask-repeat: no-repeat;
+      animation: maskSlideUp 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  gap: 10px;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  padding: 20px;
+  margin: 0;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  background-color: #121114;
+
+  &.is-active {
+    transform: translateX(0);
+  }
+
+  @media screen and (min-width: 1024px) {
+    gap: 50px;
+    flex-direction: row;
+    transform: translateX(0);
+    position: static;
+    padding: 0;
+    background-color: transparent;
+  }
+
+  a {
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+    font-size: 24px;
+    line-height: 1.4;
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    .original {
+      opacity: 0;
+    }
+
+    .scrambled {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+    }
+
+    @media screen and (min-width: 1024px) {
+      font-size: 14px;
+      display: inline-grid;
+
+      .scrambled {
+        text-align: left;
+      }
+    }
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__trigger {
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    width: 25px;
+    height: 25px;
+    position: relative;
+
+    &:before,
+      &:after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #fff;
+        transition: transform 0.3s ease;
+      }
+      
+      &:before {
+        top: 0;
+      }
+      
+      &:after {
+        bottom: 0;
+      }
+
+      &.is-active {
+        &:before {
+          transform: translateY(11px) rotate(45deg);
+        }
+        
+        &:after {
+          transform: translateY(-12px) rotate(-45deg);
+        }
+
+        span {
+          opacity: 0;
+        }
+      }
+
+    span {
+      position: absolute;
+      top: calc(50% - 1px);
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: #fff;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+  
+   @media screen and (min-width: 1024px) {
+    display: none;
+   } 
+  }
+}
