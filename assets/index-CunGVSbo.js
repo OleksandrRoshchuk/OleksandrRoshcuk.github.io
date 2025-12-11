@@ -3967,10 +3967,8 @@ No matching component was found for:
     uniform float uTime;
     uniform vec3 uMouse;
     
-    // Змінили назву змінної, щоб було зрозуміло: це ПОЧАТКОВА висота
     varying float vInitialY;
     
-    // --- Simplex Noise Functions (без змін) ---
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
@@ -4023,14 +4021,10 @@ No matching component was found for:
     }
 
     void main() {
-      // === ФІКС КОЛЬОРУ ===
-      // Зберігаємо початкову позицію Y ДО будь-яких трансформацій.
-      // position - це атрибут, який ми передали з JS (наша початкова коробка).
       vInitialY = position.y;
 
       vec3 pos = position;
       
-      // 1. Рух
       float globalCurve = sin(pos.x * 0.05 + uTime * 0.2) * 8.0; 
       pos.y += globalCurve;
 
@@ -4046,6 +4040,16 @@ No matching component was found for:
       pos.y += noiseY * amplitude;
       pos.z += noiseZ * amplitude;
 
+      float dist = distance(pos.xy, uMouse.xy);
+      float radius = 12.0;
+
+      if (dist < radius) {
+        float force = (radius - dist) / radius;
+        force = pow(force, 2.0); 
+        vec3 dir = normalize(pos - uMouse);
+        pos += dir * force * 15.0; 
+      }
+
       vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
       gl_PointSize = 180.0 / -mvPosition.z; 
       gl_Position = projectionMatrix * mvPosition;
@@ -4054,21 +4058,16 @@ No matching component was found for:
     uniform vec3 uColorTop;
     uniform vec3 uColorBottom;
     
-    // Отримуємо початкову висоту
     varying float vInitialY;
 
     void main() {
       float r = distance(gl_PointCoord, vec2(0.5));
       if (r > 0.5) discard;
       
-      // === ФІКС ГРАДІЄНТА ===
-      // Використовуємо vInitialY.
-      // Оскільки висота нашого box у JS = 14, то координати йдуть від -7 до +7.
-      // Використовуємо ці межі для smoothstep.
       float gradientFactor = smoothstep(-7.0, 7.0, vInitialY);
       
       vec3 finalColor = mix(uColorBottom, uColorTop, gradientFactor);
 
       gl_FragColor = vec4(finalColor, 1.0);
     }
-  `},nL=()=>{const r=Ae.useRef(),t=Ae.useRef(!1),e=8e3,n=Ae.useMemo(()=>{const o=new Float32Array(e*3),f=100,h=14,m=14;for(let g=0;g<e;g++)o[g*3]=(Math.random()-.5)*f,o[g*3+1]=(Math.random()-.5)*h,o[g*3+2]=(Math.random()-.5)*m;return o},[]),s=Ae.useMemo(()=>({uTime:{value:0},uMouse:{value:new j(1e4,1e4,0)},uColorTop:{value:new de(tL)},uColorBottom:{value:new de(eL)}}),[]);return OM.useEffect(()=>{const o=()=>{t.current=!0};return window.addEventListener("mousemove",o),()=>window.removeEventListener("mousemove",o)},[]),k3(o=>{if(r.current&&(r.current.material.uniforms.uTime.value=o.clock.getElapsedTime(),t.current)){const f=o.pointer.x*o.viewport.width/2,h=o.pointer.y*o.viewport.height/2;r.current.material.uniforms.uMouse.value.set(f,h,0)}}),Oe.jsxs("points",{ref:r,children:[Oe.jsx("bufferGeometry",{children:Oe.jsx("bufferAttribute",{attach:"attributes-position",count:e,array:n,itemSize:3})}),Oe.jsx("shaderMaterial",{attach:"material",vertexShader:NM.vertexShader,fragmentShader:NM.fragmentShader,uniforms:s,transparent:!1,depthWrite:!0})]})};function iL(){const[r,t]=Ae.useState(!1);return Oe.jsx("div",{className:"particles-plane",style:{opacity:r?1:0,transition:"opacity 1.5s ease-in-out"},children:Oe.jsxs(qO,{camera:{position:[0,0,50],fov:50},gl:{alpha:!0},onCreated:()=>{setTimeout(()=>t(!0),100)},children:[Oe.jsx($O,{enableRotate:!1,enableZoom:!1}),Oe.jsx(nL,{})]})})}function aL(){const[r,t]=Ae.useState(0);return Oe.jsxs(Oe.Fragment,{children:[Oe.jsx(iT,{}),Oe.jsx(lT,{}),Oe.jsx(oT,{quantity:24}),Oe.jsx(iL,{})]})}$E.createRoot(document.getElementById("root")).render(Oe.jsx(Ae.StrictMode,{children:Oe.jsx(aL,{})}));
+  `},nL=()=>{const r=Ae.useRef(),t=Ae.useRef(!1),e=8e3,n=Ae.useMemo(()=>{const o=new Float32Array(e*3),f=100,h=14,m=14;for(let g=0;g<e;g++)o[g*3]=(Math.random()-.5)*f,o[g*3+1]=(Math.random()-.5)*h,o[g*3+2]=(Math.random()-.5)*m;return o},[]),s=Ae.useMemo(()=>({uTime:{value:0},uMouse:{value:new j(1e4,1e4,0)},uColorTop:{value:new de(tL)},uColorBottom:{value:new de(eL)}}),[]);return OM.useEffect(()=>{const o=()=>{t.current=!0};return window.addEventListener("mousemove",o),()=>window.removeEventListener("mousemove",o)},[]),k3(o=>{if(r.current&&(r.current.material.uniforms.uTime.value=o.clock.getElapsedTime(),t.current)){const f=o.pointer.x*o.viewport.width/2,h=o.pointer.y*o.viewport.height/2;r.current.material.uniforms.uMouse.value.set(f,h,0)}}),Oe.jsxs("points",{ref:r,children:[Oe.jsx("bufferGeometry",{children:Oe.jsx("bufferAttribute",{attach:"attributes-position",count:e,array:n,itemSize:3})}),Oe.jsx("shaderMaterial",{attach:"material",vertexShader:NM.vertexShader,fragmentShader:NM.fragmentShader,uniforms:s,transparent:!1,depthWrite:!0})]})};function iL(){const[r,t]=Ae.useState(!1);return Oe.jsx("div",{className:`${r?"particles-plane particles-plane--show":"particles-plane"}`,style:{opacity:r?1:0,transition:"opacity 1.5s ease-in-out"},children:Oe.jsxs(qO,{camera:{position:[0,0,50],fov:50},gl:{alpha:!0,antialias:!0},onCreated:()=>{setTimeout(()=>t(!0),300)},children:[Oe.jsx($O,{enableRotate:!1,enableZoom:!1}),Oe.jsx(nL,{})]})})}function aL(){const[r,t]=Ae.useState(0);return Oe.jsxs(Oe.Fragment,{children:[Oe.jsx(iT,{}),Oe.jsx(lT,{}),Oe.jsx(oT,{quantity:24}),Oe.jsx(iL,{})]})}$E.createRoot(document.getElementById("root")).render(Oe.jsx(Ae.StrictMode,{children:Oe.jsx(aL,{style:{backgroundColor:"#121114"}})}));
