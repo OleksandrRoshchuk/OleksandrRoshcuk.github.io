@@ -1,5 +1,5 @@
-import ButtonLink from './ui/ButtonLink';
-import ScrollDown from './ui/ScrollDown';
+import ButtonLink from '../ui/ButtonLink/ButtonLink';
+import ScrollDown from '../ui/ScrollDown/ScrollDown';
 import './MainContent.scss';
 
 export default function MainContent() {

@@ -1,5 +1,5 @@
 import './ScrollDown.scss';
-import arrow from '../../assets/arrow.svg';
+import arrow from '../../../assets/arrow.svg';
 export default function ScrollDown({ link = '#' }) {
   return (
     <a href={link} className='scroll-down'>

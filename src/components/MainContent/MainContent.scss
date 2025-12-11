@@ -4,29 +4,44 @@
   align-items: center;
   justify-content: center; 
   height: calc(100vh - 61px);
-  margin: 0 auto;
+  padding-inline: 16px;
   padding-bottom: 44px;
-  max-width: 90%;
+  
 
   @media screen and (min-width: 1024px) {
       height: calc(100vh - 96px);
       justify-content: flex-end; 
       max-width: 915px;
+      margin: 0 auto;
+  }
+
+  .btn {
+    position: relative;
+    z-index: 1;
+  }
+
+  .scroll-down {
+    position: relative;
+    z-index: 1;
   }
 
   &__title {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
     font-size: 48px;
     line-height: 1.05;
     text-align: center; 
     margin-bottom: 36px;
     margin-top: 6px;
-    mask-image: url("../assets/mask.PNG");
-    mask-size: cover;
+    mask-image: url("../../assets/mask.PNG");
+    mask-size:  200% 400%;
     mask-position: 0% 0%;
     mask-repeat: no-repeat;
     animation: maskSlideUp 2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     @media screen and (min-width: 1024px) {
       font-size: 84px;
+      mask-size:  cover;
     }
   }
 }

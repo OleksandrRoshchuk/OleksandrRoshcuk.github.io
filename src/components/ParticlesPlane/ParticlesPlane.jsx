@@ -1,4 +1,6 @@
-import React, { useRef, useMemo, useState } from 'react';
+// Done with the help of AI
+
+import React, { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
@@ -13,10 +15,8 @@ const ParticlesMaterial = {
     uniform float uTime;
     uniform vec3 uMouse;
     
-    // Змінили назву змінної, щоб було зрозуміло: це ПОЧАТКОВА висота
     varying float vInitialY;
     
-    // --- Simplex Noise Functions (без змін) ---
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
     vec4 permute(vec4 x) { return mod289(((x*34.0)+1.0)*x); }
@@ -69,14 +69,10 @@ const ParticlesMaterial = {
     }
 
     void main() {
-      // === ФІКС КОЛЬОРУ ===
-      // Зберігаємо початкову позицію Y ДО будь-яких трансформацій.
-      // position - це атрибут, який ми передали з JS (наша початкова коробка).
       vInitialY = position.y;
 
       vec3 pos = position;
       
-      // 1. Рух
       float globalCurve = sin(pos.x * 0.05 + uTime * 0.2) * 8.0; 
       pos.y += globalCurve;
 
@@ -92,6 +88,16 @@ const ParticlesMaterial = {
       pos.y += noiseY * amplitude;
       pos.z += noiseZ * amplitude;
 
+      float dist = distance(pos.xy, uMouse.xy);
+      float radius = 12.0;
+
+      if (dist < radius) {
+        float force = (radius - dist) / radius;
+        force = pow(force, 2.0); 
+        vec3 dir = normalize(pos - uMouse);
+        pos += dir * force * 15.0; 
+      }
+
       vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
       gl_PointSize = 180.0 / -mvPosition.z; 
       gl_Position = projectionMatrix * mvPosition;
@@ -101,17 +107,12 @@ const ParticlesMaterial = {
     uniform vec3 uColorTop;
     uniform vec3 uColorBottom;
     
-    // Отримуємо початкову висоту
     varying float vInitialY;
 
     void main() {
       float r = distance(gl_PointCoord, vec2(0.5));
       if (r > 0.5) discard;
       
-      // === ФІКС ГРАДІЄНТА ===
-      // Використовуємо vInitialY.
-      // Оскільки висота нашого box у JS = 14, то координати йдуть від -7 до +7.
-      // Використовуємо ці межі для smoothstep.
       float gradientFactor = smoothstep(-7.0, 7.0, vInitialY);
       
       vec3 finalColor = mix(uColorBottom, uColorTop, gradientFactor);
@@ -129,7 +130,7 @@ const Particles = () => {
   const positions = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const width = 100;
-    const height = 14; // <--- Ось висота нашої коробки (від -7 до 7)
+    const height = 14;
     const depth = 14;
 
     for (let i = 0; i < count; i++) {
@@ -198,7 +199,9 @@ export default function ParticlesPlane() {
 
   return (
     <div
-      className='particles-plane'
+      className={`${
+        ready ? 'particles-plane particles-plane--show' : 'particles-plane'
+      }`}
       style={{
         opacity: ready ? 1 : 0,
         transition: 'opacity 1.5s ease-in-out',
@@ -206,9 +209,9 @@ export default function ParticlesPlane() {
     >
       <Canvas
         camera={{ position: [0, 0, 50], fov: 50 }}
-        gl={{ alpha: true }}
+        gl={{ alpha: true, antialias: true }}
         onCreated={() => {
-          setTimeout(() => setReady(true), 100);
+          setTimeout(() => setReady(true), 300);
         }}
       >
         <OrbitControls enableRotate={false} enableZoom={false} />
